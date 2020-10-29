@@ -3,8 +3,10 @@
     "target": "es6", /* Vai dizer que o codigo ts que foi escrito sera traduzido para es6 */
     "outDir": "app/js", /* O resultado das compilacoes vao cair dentro desse diretorio  */
     "noEmitOnError": true, /* Evita que o ts compile com erros  */
-    "noImplicitAny": false,
-    "removeComments": true
+    "noImplicitAny": false, /* Desativa o uso do tipo Any automatico */
+    "removeComments": true, /* Remove os comentarios quando builda */
+    "module": "System", /* Loader de scripts */
+    "strictNullChecks": false /* Quando TRUE ele não deixa atribuir valor null nem undefined. So se passar como tipo */
   },
   "include": [
     "app/ts/**/*" /* Indica para o compilador quais os arquivos que devem ser compilados */
