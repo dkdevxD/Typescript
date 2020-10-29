@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6", /* Vai dizer que o codigo ts que foi escrito sera traduzido para es6 */
+    "outDir": "app/js", /* O resultado das compilacoes vao cair dentro desse diretorio  */
+    "noEmitOnError": true, /* Evita que o ts compile com erros  */
+    "noImplicitAny": false,
+    "removeComments": true
+  },
+  "include": [
+    "app/ts/**/*" /* Indica para o compilador quais os arquivos que devem ser compilados */
+  ]
+}

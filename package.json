@@ -1,0 +1,25 @@
+{
+  "name": "dkbank",
+  "version": "1.0.0",
+  "description": "- In Progress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkdevxD/Typescript.git"
+  },
+  "author": "DkDevxD",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dkdevxD/Typescript/issues"
+  },
+  "homepage": "https://github.com/dkdevxD/Typescript#readme",
+  "devDependencies": {
+    "@types/jquery": "^2.0.42",
+    "typescript": "^2.3.2"
+  }
+}
