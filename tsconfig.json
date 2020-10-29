@@ -6,7 +6,8 @@
     "noImplicitAny": false, /* Desativa o uso do tipo Any automatico */
     "removeComments": true, /* Remove os comentarios quando builda */
     "module": "System", /* Loader de scripts */
-    "strictNullChecks": false /* Quando TRUE ele não deixa atribuir valor null nem undefined. So se passar como tipo */
+    "strictNullChecks": true, /* Quando TRUE ele não infere valor null nem undefined. So se passar como tipo */
+    "experimentalDecorators": true /* Ativa o decorator */
   },
   "include": [
     "app/ts/**/*" /* Indica para o compilador quais os arquivos que devem ser compilados */

@@ -1,0 +1,27 @@
+export function logarTempoDeExecucao(emSegundos: boolean = false) {
+  return function (target: any, propriedade: string, descriptor: PropertyDescriptor) {
+
+    const metodoOriginal = descriptor.value;
+
+    descriptor.value = function (...args: any[]) {
+      let divisor = 1;
+      let unidade = 'ms'
+
+      if (emSegundos) {
+        divisor = 1000;
+        unidade = 's'
+      }
+
+      console.log('-----------------');
+      console.log(`Parâmetros do método ${propriedade}: ${JSON.stringify(args)}`);
+      const t1 = performance.now();
+      const resultado = metodoOriginal.apply(this, args);
+      console.log(`Resultado do método: ${JSON.stringify(resultado)}`);
+      const t2 = performance.now();
+      console.log(`${propriedade} demorou ${(t2 - t1)/ divisor} ${unidade}`);
+      console.log('-----------------');
+      return resultado
+    }
+    return descriptor;
+  }
+}
