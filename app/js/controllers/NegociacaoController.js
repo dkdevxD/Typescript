@@ -6,6 +6,14 @@ System.register(["../helpers/index", "../models/index", "../views/index", "../se
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
+    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
     var __moduleName = context_1 && context_1.id;
     var index_1, index_2, index_3, index_4, timer, NegociacaoController, diaDaSemana;
     return {
@@ -50,24 +58,29 @@ System.register(["../helpers/index", "../models/index", "../views/index", "../se
                     return data.getDay() != diaDaSemana.Domingo && data.getDay() != diaDaSemana.Sabado;
                 }
                 importaDados() {
-                    const isOk = (res) => {
-                        if (res.ok) {
-                            return res;
+                    return __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            const isOk = (res) => {
+                                if (res.ok) {
+                                    return res;
+                                }
+                                else {
+                                    throw new Error(res.statusText);
+                                }
+                            };
+                            const negociacoesParaImportar = yield this.service
+                                .obterNegociacoes(isOk);
+                            const negociacoesImportadas = this.negociacoes.paraArray();
+                            negociacoesParaImportar
+                                .filter(negociacao => !negociacoesImportadas.some(importadas => negociacao.ehIgual(importadas)))
+                                .forEach(negociacao => this.negociacoes.adiciona(negociacao));
+                            this.negociacoesView.update(this.negociacoes);
                         }
-                        else {
-                            throw new Error(res.statusText);
+                        catch (error) {
+                            this.mensagemView.update(error.message);
+                            let msg = $('.alert-success');
+                            msg.addClass('alert-warning');
                         }
-                    };
-                    this.service
-                        .obterNegociacoes(isOk)
-                        .then(negociacoes => {
-                        negociacoes.forEach(negociacao => this.negociacoes.adiciona(negociacao));
-                        this.negociacoesView.update(this.negociacoes);
-                    })
-                        .catch(error => {
-                        this.mensagemView.update('Não foi possível importar as negociações!');
-                        let msg = $('.alert-success');
-                        msg.addClass('alert-warning');
                     });
                 }
             };

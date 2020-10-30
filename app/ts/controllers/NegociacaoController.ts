@@ -1,5 +1,5 @@
 import { injectDom, throttle } from "../helpers/index";
-import { Negociacao, Negociacoes, NegociacoesImportadas } from "../models/index";
+import { Negociacao, Negociacoes } from "../models/index";
 import { MensagemView, NegociacoesView } from "../views/index";
 import { NegociacaoService, ResponseHandler } from '../service/index';
 
@@ -51,27 +51,34 @@ export class NegociacaoController {
   }
 
   @throttle(500)
-  importaDados() {
+  async importaDados() {
 
-    const isOk: ResponseHandler = (res: Response) => {
-      if (res.ok) {
-        return res;
-      } else {
-        throw new Error(res.statusText)
-      }
-    }
-    this.service
-      .obterNegociacoes(isOk)
-      .then(negociacoes => {
-        negociacoes.forEach(negociacao =>
+    try {
+      const isOk: ResponseHandler = (res: Response) => {
+        if (res.ok) {
+          return res;
+        } else {
+          throw new Error(res.statusText)
+        }
+      };
+
+      const negociacoesParaImportar = await this.service
+        .obterNegociacoes(isOk);
+
+      const negociacoesImportadas = this.negociacoes.paraArray();
+
+      negociacoesParaImportar
+        .filter(negociacao =>
+          !negociacoesImportadas.some(importadas =>
+            negociacao.ehIgual(importadas)))
+        .forEach(negociacao =>
           this.negociacoes.adiciona(negociacao));
-        this.negociacoesView.update(this.negociacoes);
-      })
-      .catch(error => {
-        this.mensagemView.update('Não foi possível importar as negociações!');
-        let msg = $('.alert-success');
-        msg.addClass('alert-warning');
-      });
+      this.negociacoesView.update(this.negociacoes);
+    } catch (error) {
+      this.mensagemView.update(error.message);
+      let msg = $('.alert-success');
+      msg.addClass('alert-warning');
+    }
   }
 }
 

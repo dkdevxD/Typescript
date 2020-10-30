@@ -14,6 +14,11 @@ System.register([], function (exports_1, context_1) {
                 volume() {
                     return this.quantidade * this.valor;
                 }
+                ehIgual(negociacao) {
+                    return this.data.getDate() == this.data.getDate() &&
+                        this.data.getMonth() == this.data.getMonth() &&
+                        this.data.getFullYear() == this.data.getFullYear();
+                }
             };
             exports_1("Negociacao", Negociacao);
         }
