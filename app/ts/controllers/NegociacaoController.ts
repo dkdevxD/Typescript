@@ -1,6 +1,9 @@
-import { injectDom } from "../helpers/injectDom";
-import { Negociacao, Negociacoes } from "../models/index";
+import { injectDom, throttle } from "../helpers/index";
+import { Negociacao, Negociacoes, NegociacoesImportadas } from "../models/index";
 import { MensagemView, NegociacoesView } from "../views/index";
+import { NegociacaoService, ResponseHandler } from '../service/index';
+
+let timer = 0;
 
 export class NegociacaoController {
 
@@ -16,14 +19,13 @@ export class NegociacaoController {
   private negociacoes = new Negociacoes();
   private negociacoesView = new NegociacoesView('.negociacoes-view');
   private mensagemView = new MensagemView('#mensagemView');
+  private service = new NegociacaoService();
 
   constructor() {
     this.negociacoesView.update(this.negociacoes);
   }
-
-  adiciona(event: Event) {
-    event.preventDefault();
-
+  @throttle(500)
+  adiciona() {
     let data = new Date(this.inputData.val().replace(/-/g, ','));
 
     if (!this._ehDiaUtil(data)) {
@@ -46,6 +48,30 @@ export class NegociacaoController {
 
   private _ehDiaUtil(data: Date) {
     return data.getDay() != diaDaSemana.Domingo && data.getDay() != diaDaSemana.Sabado;
+  }
+
+  @throttle(500)
+  importaDados() {
+
+    const isOk: ResponseHandler = (res: Response) => {
+      if (res.ok) {
+        return res;
+      } else {
+        throw new Error(res.statusText)
+      }
+    }
+    this.service
+      .obterNegociacoes(isOk)
+      .then(negociacoes => {
+        negociacoes.forEach(negociacao =>
+          this.negociacoes.adiciona(negociacao));
+        this.negociacoesView.update(this.negociacoes);
+      })
+      .catch(error => {
+        this.mensagemView.update('Não foi possível importar as negociações!');
+        let msg = $('.alert-success');
+        msg.addClass('alert-warning');
+      });
   }
 }
 

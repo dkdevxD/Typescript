@@ -11,14 +11,9 @@ System.register([], function (exports_1, context_1) {
                     divisor = 1000;
                     unidade = 's';
                 }
-                console.log('-----------------');
-                console.log(`Parâmetros do método ${propriedade}: ${JSON.stringify(args)}`);
                 const t1 = performance.now();
                 const resultado = metodoOriginal.apply(this, args);
-                console.log(`Resultado do método: ${JSON.stringify(resultado)}`);
                 const t2 = performance.now();
-                console.log(`${propriedade} demorou ${(t2 - t1) / divisor} ${unidade}`);
-                console.log('-----------------');
                 return resultado;
             };
             return descriptor;
